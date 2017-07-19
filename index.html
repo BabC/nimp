@@ -10,7 +10,28 @@
     We are using Node.js <script>document.write(process.versions.node)</script>,
     Chromium <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.
-  </body>
+ 
+	<div id="app">
+	  {{ message }}
+	</div>
+	
+	<div id="app-2">
+	  <span v-bind:title="message">
+		ça affiche un petit tooltip, vraiment sous l'coude l'émotion
+	  </span>
+	</div>
+	
+	
+	<div id="app-3">
+		<button id="bouton" v-on:click="inverse">Blawa</button>
+	  <p v-if="seen===true">Now you see me</p>
+	  {{ seen }}
+	  {{ autre }}
+	</div>
+	
+	<script src="https://unpkg.com/vue"></script>
+	<script src="./public/script/vue.js"></script>
+ </body>
 
   <script>
     // You can also require other files to run in this process
