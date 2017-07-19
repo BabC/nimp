@@ -7,23 +7,30 @@
 var items = require('./item');
 var Datastore = require('nedb'),
     db = new Datastore({
-        filename: 'plantdb.chill',
+        filename: './plantdb.chill',
         autoload: true
     });
 
 module.exports = {
     getAll: function (callback) {
-        db.find({}, function (err, docs) {
-            callback(docs);
+        db.find({}, function (err, plants) {
+            callback(err, plants);
         });
+    },
+    getItemById: function (id, callback) {
+        db.find({
+                _id: id
+            },
+            function (err, item) {
+                callback(err, item[0]);
+            })
     },
 
     insert: function (item, callback) {
-        console.log(item._id);
         db.insert({
-            item: item[0]._id
-        }, function (err, docs) {
-            callback(docs);
+            item: item._id
+        }, function (err, newPlant) {
+            callback(err, newPlant);
         });
     }
 };

@@ -8,7 +8,7 @@
  */
 var Datastore = require('nedb'),
     db = new Datastore({
-        filename: 'itemdb.chill',
+        filename: './itemdb.chill',
         autoload: true
     });
 
@@ -26,15 +26,22 @@ db.insert(doc, function (err, newDoc) { // Callback is optional
 module.exports = {
     getAll: function (callback) {
         db.find({}, function (err, docs) {
-            callback(docs);
+            callback(err, docs);
         });
     },
 
     getByName: function (name, callback) {
         db.find({
             nom: name
-        }, function (err, docs) {
-            callback(docs);
+        }, function (err, item) {
+            callback(err, item[0]);
+        });
+    },
+    getById: function (id, callback) {
+        db.find({
+            _id: id
+        }, function (err, item) {
+            callback(err, item[0]);
         });
     },
 
@@ -43,8 +50,8 @@ module.exports = {
             nom: name,
             img: img,
             conseils_arrosage: conseils_arrosage
-        }, function (err, docs) {
-            callback(err);
+        }, function (err, newItem) {
+            callback(err, newItem);
         });
     }
 };
