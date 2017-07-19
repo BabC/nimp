@@ -1,17 +1,56 @@
-// app/models/article.js
-// load the things we need
-var mongoose = require('mongoose');
+/*
+ * PLANT
+ * nom : string
+ * largeur : int
+ * longueur : int
+ * nb_case_y : int
+ * nb-case_x : int
+ * cases[][] : case|case
+ * 
+ */
+var cases = require('./case');
 
-// define the schema for our user model
-var potagerSchema = mongoose.Schema({
-	nom       : String,
-	longueur_case     : Number,
-	largeur_case     : Number,
-	nb_cases_x     : Number,
-	nb_cases_y     : Number,
-	cases      : [{type: mongoose.Schema.Types.ObjectId, ref: 'Case'}]
-});
+var Datastore = require('nedb'),
+	db = new Datastore({
+		filename: './potagerdb.chill',
+		autoload: true
+	});
 
-// create the model for articles and expose it to our app
-module.exports = mongoose.model('Potager', potagerSchema);
+// appels à la bdd
+module.exports = {
+	getAll: function (callback) {
+		db.find({}, function (err, docs) {
+			callback(docs);
+		});
+	},
 
+	insert: function (nom, largeur, longueur, nbCaseY, nbCaseX, callback) {
+		var tabCases = [];
+		tabCases.length = nbCaseX;
+		for(var i = 0; i<nbCaseX; i++){
+			tabCases[i] = [];
+			tabCases[i].length = nbCaseY;
+		}
+		db.insert({
+			nom: nom,
+			largeur: largeur,
+			longueur: longueur,
+			nb_case_y: nbCaseY,
+			nb_case_x: nbCaseX,
+			cases : tabCases
+			// création de tableau vide de dimension x y,
+		}, function (err, newPotager) {
+			callback(err, newPotager);
+		});
+	},
+
+	getOneByNom: function (nom, callback) {
+		db.find({
+			nom: nom
+		}, function (err, element) {
+			callback(err, element[0]);
+		});
+	}
+
+
+};
