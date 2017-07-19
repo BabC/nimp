@@ -1,14 +1,16 @@
-var Datastore = require('nedb'),
-    db = new Datastore({
-        filename: 'datafile',
-        autoload: true
-    });
+var items = require('./item');
+var plants = require('./plant');
+
+//items.getAllItem();
+//items.insert('tomate', '', 6, function (err) {});
+
+/*items.getAll(function (docs) {
+    console.log(docs);
+})*/
 
 
-db.find({
 
-}, function (err, docs) {
-    docs.forEach(function (entry) {
-        console.log(entry);
-    });
-});
+/*
+plants.getAll(function (docs) {
+    console.log(docs);
+})*/

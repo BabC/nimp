@@ -1,14 +1,42 @@
-// app/models/article.js
-// load the things we need
-var mongoose = require('mongoose');
+/*
+ * CASE
+ * 
+ * x: Number
+ * y: Number
+ * plant: Plant
+ * 
+ */
+var plant = require('./plant');
+var Datastore = require('nedb'),
+    db = new Datastore({
+        filename: 'casedb.chill',
+        autoload: true
+    });
 
-// define the schema for our user model
-var caseSchema = mongoose.Schema({
-	x     : Number,
-	y     : Number,
-	plant      : {type: mongoose.Schema.Types.ObjectId, ref: 'Plant'}
-});
+module.exports = {
+    getAll: function (callback) {
+        db.find({}, function (err, docs) {
+            callback(docs);
+        });
+    },
 
-// create the model for articles and expose it to our app
-module.exports = mongoose.model('Case', caseSchema);
+    getPlantAtXY: function (x, y, callback) {
+        db.find({
+            x: x,
+            y: y
+        }, function (err, doc) {
 
+        });
+    },
+
+    insert: function (x, y, plant, callback) {
+        console.log(item._id);
+        db.insert({
+            x: x,
+            y: y,
+            plant: plant[0]._id
+        }, function (err, docs) {
+            callback(docs);
+        });
+    }
+};
