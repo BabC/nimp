@@ -1,13 +1,46 @@
-// app/models/article.js
-// load the things we need
-var mongoose = require('mongoose');
+/*
+ * Arrosage
+ * 
+ * date: Date
+ * plant: Plant
+ * 
+ */
+var plant = require('./plant');
+var Datastore = require('nedb'),
+    db = new Datastore({
+        filename: './arrosagedb.chill',
+        autoload: true
+    });
 
-// define the schema for our user model
-var arrosageSchema = mongoose.Schema({
-	date : {type: Date, default: Date.now},
-	plant      : {type: mongoose.Schema.Types.ObjectId, ref: 'Plant'}
-});
 
-// create the model for articles and expose it to our app
-module.exports = mongoose.model('Arrosage', arrosageSchema);
+module.exports = {
+    getAll: function (callback) {
+        db.find({}, function (err, docs) {
+            callback(err, docs);
+        });
+    },
 
+    getByDate: function (date, callback) {
+        db.find({
+            date: date
+        }, function (err, arrosages) {
+            callback(err, arrosages);
+        });
+    },
+    getByPlant: function (plant, callback) {
+        db.find({
+            plant: plant
+        }, function (err, arrosages) {
+            callback(err, arrosages);
+        });
+    },
+
+    insert: function (date, plant, callback) {
+        db.insert({
+            date: date,
+            plant: plant._id,
+        }, function (err, newArrosage) {
+            callback(err, newArrosage);
+        });
+    }
+};

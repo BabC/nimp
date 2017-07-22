@@ -1,14 +1,48 @@
-// app/models/article.js
-// load the things we need
-var mongoose = require('mongoose');
+/*
+ * RECOLTE  
+ * 
+ * date: Date
+ * plant: Plant
+ * poids: Number
+ * 
+ */
+var plant = require('./plant');
+var Datastore = require('nedb'),
+    db = new Datastore({
+        filename: './recoltedb.chill',
+        autoload: true
+    });
 
-// define the schema for our user model
-var recolteSchema = mongoose.Schema({
-	date : {type: Date, default: Date.now},
-	poids: Number,
-	plant      : {type: mongoose.Schema.Types.ObjectId, ref: 'Plant'}
-});
 
-// create the model for articles and expose it to our app
-module.exports = mongoose.model('Recolte', recolteSchema);
+module.exports = {
+    getAll: function (callback) {
+        db.find({}, function (err, docs) {
+            callback(err, docs);
+        });
+    },
 
+    getByDate: function (date, callback) {
+        db.find({
+            date: date
+        }, function (err, recoltes) {
+            callback(err, recoltes);
+        });
+    },
+    getByPlant: function (plant, callback) {
+        db.find({
+            plant: plant
+        }, function (err, recoltes) {
+            callback(err, recoltes);
+        });
+    },
+
+    insert: function (date, plant, poids, callback) {
+        db.insert({
+            date: date,
+            plant: plant._id,
+            poids: poids
+        }, function (err, newRecolte) {
+            callback(err, newRecolte);
+        });
+    }
+};
